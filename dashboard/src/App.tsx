@@ -6,6 +6,8 @@ import Qbs from './Qbs'
 import Review from './Review'
 import Simulator from './Simulator'
 import { THEMES, useTheme } from './theme'
+import Tour, { TourButton, shouldAutostartTour } from './Tour'
+import { useState } from 'react'
 import { Icon, Loading, useApi, useRoute } from './ui'
 
 export const NAV = [
@@ -24,6 +26,8 @@ export default function App() {
   const { data: meta, error } = useApi('api/meta')
   const { theme, setTheme } = useTheme()
   const cur = NAV.find(n => n.id === page)!
+  // Al abrir la app se ofrece el tour (una vez por sesion del navegador); el header permite repetirlo.
+  const [tour, setTour] = useState<null | { auto: boolean; n: number }>(() => (shouldAutostartTour() ? { auto: true, n: 0 } : null))
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -34,7 +38,7 @@ export default function App() {
               <img src="brand/fciencias.svg" alt="Escudo de la Facultad de Ciencias, UNAM" className="h-full w-full object-contain" />
             </span>
             <span className="hidden sm:block"><span className="block font-bold leading-tight">PickSixers</span>
-              <span className="block text-xs text-muted">Decisiones bajo presión · Facultad de Ciencias, UNAM</span></span>
+              <span className="block text-xs text-muted xl:hidden 2xl:block">Decisiones bajo presión · Facultad de Ciencias, UNAM</span></span>
           </button>
 
           <nav className="hidden flex-1 items-center justify-center gap-0.5 xl:flex" aria-label="Secciones">
@@ -45,7 +49,8 @@ export default function App() {
           </nav>
 
           <div className="ml-auto flex items-center gap-2 xl:ml-0">
-            <Icon name="palette" className="h-4 w-4 text-muted" />
+            <TourButton onClick={() => setTour(t => ({ auto: false, n: (t?.n ?? 0) + 1 }))} />
+            <Icon name="palette" className="ml-1 h-4 w-4 text-muted" />
             <label htmlFor="tema" className="sr-only">Tema</label>
             <select id="tema" value={theme} onChange={e => setTheme(e.target.value)}
               className="rounded-lg border border-line bg-soft px-2 py-1.5 text-sm outline-none">
@@ -77,6 +82,8 @@ export default function App() {
           page === 'qbs' ? <Qbs meta={meta} parts={parts.slice(1)} go={go} /> :
           <Players go={go} />}
       </main>
+
+      {tour && meta && <Tour key={tour.n} go={go} autostart={tour.auto} onClose={() => setTour(null)} />}
 
       <footer className="border-t border-line px-6 py-4 text-center text-xs text-muted">
         Datos: NFL Big Data Bowl 2023 (temporada 2021, semanas 1-8), PFF y tracking. Fotos y logos: nfl.com y ESPN vía nflverse; logo de la NFL vía nflverse. Escudo de la Facultad de Ciencias, UNAM: Wikimedia Commons (dominio público).

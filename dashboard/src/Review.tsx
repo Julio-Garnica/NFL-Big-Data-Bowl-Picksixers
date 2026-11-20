@@ -124,7 +124,7 @@ function PlayReview({ gameId, playId, go }: { gameId: number; playId: number; go
   return (
     <div className="space-y-4">
       {/* ------------------------------------------------ 1. que paso */}
-      <Card title="1. Qué pasó">
+      <div id="tour-jugada" className="scroll-mt-24"><Card title="1. Qué pasó">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2">
             <TeamLogo abbr={p.offense.abbr} size="h-12 w-12" />
@@ -174,10 +174,10 @@ function PlayReview({ gameId, playId, go }: { gameId: number; playId: number; go
             </div>
           </div>
         </div>
-      </Card>
+      </Card></div>
 
       {/* ------------------------------------------------ 2. que dicen los datos */}
-      <div className="grid gap-4 lg:grid-cols-[1.3fr_1fr]">
+      <div id="tour-datos" className="grid scroll-mt-24 gap-4 lg:grid-cols-[1.3fr_1fr]">
         <OptionTierChart options={a.options} highlight={a.rec} chosen={a.chosen}
           title={`2. Qué pasó en jugadas parecidas (${p.pressure ? 'con presión' : 'bolsillo limpio'})`} />
         <Card title="Opciones comparadas con lo que pasó" info={G.pMejor}>
@@ -206,7 +206,7 @@ function PlayReview({ gameId, playId, go }: { gameId: number; playId: number; go
       </div>
 
       {/* ------------------------------------------------ 3. veredicto */}
-      <section className={`fade-in rounded-2xl border-2 p-6 shadow-card ${vm.tone === 'warn' ? 'border-warn bg-warn/10' : vm.tone === 'good' ? 'border-good bg-good/10' : vm.tone === 'bad' ? 'border-bad bg-bad/10' : vm.tone === 'accent2' ? 'border-accent2 bg-accent2/10' : 'border-line bg-surface'}`}>
+      <section id="tour-veredicto" className={`fade-in scroll-mt-24 rounded-2xl border-2 p-6 shadow-card ${vm.tone === 'warn' ? 'border-warn bg-warn/10' : vm.tone === 'good' ? 'border-good bg-good/10' : vm.tone === 'bad' ? 'border-bad bg-bad/10' : vm.tone === 'accent2' ? 'border-accent2 bg-accent2/10' : 'border-line bg-surface'}`}>
         <h3 className="text-xs font-semibold uppercase tracking-wider text-muted">3. Veredicto</h3>
         <div className="mt-2 grid gap-6 md:grid-cols-[1.4fr_1fr]">
           <div>
@@ -214,7 +214,7 @@ function PlayReview({ gameId, playId, go }: { gameId: number; playId: number; go
             <p className="mt-2 text-sm">{vm.text}</p>
             <p className="mt-3 text-sm">
               El QB eligió <b>{a.chosenLabel}</b> y la jugada fue <b>{a.tierLabel.toLowerCase()}</b>. Los datos recomendaban <b>{a.recLabel}</b>
-              {a.tier < 2 && <> : en jugadas parecidas esa opción habría dado un mejor resultado el <b>{pct(a.pBetter)}</b> de las veces
+              {a.tier < 2 && <>: en jugadas parecidas esa opción habría dado un mejor resultado el <b>{pct(a.pBetter)}</b> de las veces
                 (IC 90 %: {pct(a.ci[0])}–{pct(a.ci[1])}) y uno peor el {pct(a.pWorse)}</>}.
             </p>
           </div>

@@ -226,6 +226,7 @@ const ICONS: Record<string, string> = {
   data: 'M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3zM4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3',
   scale: 'M12 3v18M5 7h14M5 7l-3 6a3 3 0 006 0L5 7zM19 7l-3 6a3 3 0 006 0l-3-6z',
   check: 'M5 12l5 5L20 7',
+  play: 'M12 21a9 9 0 100-18 9 9 0 000 18zM10 8.5v7l6-3.5-6-3.5z',
   line: 'M3 18h18M6 18v-5a2 2 0 012-2h0a2 2 0 012 2v5M14 18v-5a2 2 0 012-2h0a2 2 0 012 2v5M12 4l-4 4h8l-4-4z',
 }
 export function Icon({ name, className = 'h-5 w-5' }: { name: string; className?: string }) {

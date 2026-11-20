@@ -4,6 +4,9 @@
 
 Datos: NFL Big Data Bowl 2023 (temporada 2021, semanas 1-8), PFF y tracking. Fotos (nfl.com) y logos (ESPN) vía nflverse.
 
+## Tour
+Al abrir la app se ofrece un tour narrado de 45 s: el head coach de los Steelers revisa una jugada real y responde la pregunta. Usa la voz del navegador (Web Speech API); el botón **Tour** del header lo repite.
+
 ## Ejecutar
 ```powershell
 .\iniciar.cmd          # compila el dashboard si hace falta y abre la app en http://localhost:8000

@@ -9,6 +9,10 @@ const CLOSE = '\u00D7'
 
 const Ctx = createContext<() => void>(() => {})
 
+// Durante el tour solo se celebra cuando el tour lo pide (evento 'picksixers-cheer').
+let tourActive = false
+export const setTourActive = (v: boolean) => { tourActive = v }
+
 /** Perfil abierto: celebra una vez cuando el perfil seleccionado es de nuestro equipo. */
 export function useCheer(team?: string | null) {
   const cheer = useContext(Ctx)
@@ -27,7 +31,7 @@ export function SteelersProvider({ children }: { children: ReactNode }) {
   const timer = useRef<number>()
   const visibleRef = useRef(false)
 
-  const cheer = useCallback(() => {
+  const show = useCallback(() => {
     // Varios elementos del equipo al mismo tiempo generan un solo mensaje.
     if (visibleRef.current) return
     visibleRef.current = true
@@ -36,6 +40,12 @@ export function SteelersProvider({ children }: { children: ReactNode }) {
     window.clearTimeout(timer.current)
     timer.current = window.setTimeout(() => { visibleRef.current = false; setVisible(false) }, SHOW_MS)
   }, [])
+  const cheer = useCallback(() => { if (!tourActive) show() }, [show])
+  useEffect(() => {
+    const on = () => show()
+    window.addEventListener('picksixers-cheer', on)
+    return () => window.removeEventListener('picksixers-cheer', on)
+  }, [show])
   const close = () => { window.clearTimeout(timer.current); visibleRef.current = false; setVisible(false) }
 
   return (
