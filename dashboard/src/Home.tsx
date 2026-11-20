@@ -1,7 +1,6 @@
 import { Bar, BarChart, CartesianGrid, LabelList, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { G } from './glossary'
 import { TIERS } from './shared'
-import { THEMES, useTheme } from './theme'
 import { Card, ChartCard, Icon, Info, Stat, pct, useChart } from './ui'
 
 const STEPS = [
@@ -21,7 +20,6 @@ const PAGES = [
 ]
 
 export default function Home({ meta, go }: { meta: any; go: (p: string) => void }) {
-  const { theme, setTheme } = useTheme()
   const { grid, tick, tooltip, legend, c } = useChart()
   const r = meta.review
   const [pr, cl] = r.byPressure
@@ -123,23 +121,8 @@ export default function Home({ meta, go }: { meta: any; go: (p: string) => void 
         </div>
       </section>
 
-      {/* ---------------------------------------------------------------- tema y limites */}
-      <section className="grid gap-4 lg:grid-cols-2">
-        <Card title="Tema de la aplicación">
-          <p className="flex items-center gap-2 text-sm text-muted"><Icon name="palette" className="h-4 w-4" /> Elige cómo quieres ver la app. Se guarda en este navegador.</p>
-          <div className="mt-3 grid grid-cols-2 gap-3">
-            {Object.entries(THEMES).map(([k, t]) => (
-              <button key={k} type="button" onClick={() => setTheme(k)} aria-pressed={theme === k}
-                className={`rounded-xl border-2 p-3 text-left transition ${theme === k ? 'border-accent' : 'border-line hover:border-muted'}`}>
-                <div className="flex h-10 overflow-hidden rounded-lg border border-black/10">
-                  {(['bg', 'surface', 'soft', 'accent', 'accent2'] as const).map(n => (
-                    <div key={n} className="flex-1" style={{ background: `rgb(${t.p[n].split(' ').join(',')})` }} />))}
-                </div>
-                <div className="mt-2 text-sm font-semibold">{t.label}{theme === k && <span className="ml-1 text-accent">✓</span>}</div>
-                <div className="text-xs text-muted">{t.hint}</div>
-              </button>))}
-          </div>
-        </Card>
+      {/* ---------------------------------------------------------------- limites */}
+      <section>
         <Card title="Qué tener en cuenta">
           <ul className="space-y-2 text-sm">
             <li><b>Son probabilidades, no certezas.</b> Comparamos con lo que pasó en jugadas parecidas; ninguna jugada es idéntica.</li>
