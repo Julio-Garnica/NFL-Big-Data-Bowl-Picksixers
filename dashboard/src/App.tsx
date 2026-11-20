@@ -33,7 +33,7 @@ export default function App() {
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-white p-1 shadow ring-1 ring-black/5">
               <img src="brand/fciencias.svg" alt="Escudo de la Facultad de Ciencias, UNAM" className="h-full w-full object-contain" />
             </span>
-            <span className="hidden sm:block"><span className="block font-bold leading-tight">Picksixers</span>
+            <span className="hidden sm:block"><span className="block font-bold leading-tight">PickSixers</span>
               <span className="block text-xs text-muted">Decisiones bajo presión · Facultad de Ciencias, UNAM</span></span>
           </button>
 
@@ -79,7 +79,7 @@ export default function App() {
       </main>
 
       <footer className="border-t border-line px-6 py-4 text-center text-xs text-muted">
-        Datos: NFL Big Data Bowl 2023 (temporada 2021, semanas 1-8), PFF y tracking. Fotos y logos: nfl.com y ESPN vía nflverse. Escudo de la Facultad de Ciencias, UNAM: Wikimedia Commons (dominio público).
+        Datos: NFL Big Data Bowl 2023 (temporada 2021, semanas 1-8), PFF y tracking. Fotos y logos: nfl.com y ESPN vía nflverse; logo de la NFL vía nflverse. Escudo de la Facultad de Ciencias, UNAM: Wikimedia Commons (dominio público).
       </footer>
     </div>
   )

@@ -31,11 +31,14 @@ export default function Home({ meta, go }: { meta: any; go: (p: string) => void 
       <section className="fade-in relative overflow-hidden rounded-3xl border border-line p-8 shadow-card md:p-12"
         style={{ background: 'linear-gradient(135deg, rgb(var(--accent) / 0.20), rgb(var(--accent2) / 0.16) 55%, rgb(var(--surface)))' }}>
         <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-accent"><Icon name="question" className="h-4 w-4" /> La pregunta que respondemos</p>
-        <h1 className="mt-3 max-w-4xl text-3xl font-extrabold leading-tight tracking-tight md:text-5xl">
-          Cuando la defensa presiona al QB, ¿tomó la mejor decisión? Y si no, ¿qué probabilidad había de que la jugada saliera mejor?
-        </h1>
+        <div className="mt-3 flex items-center gap-6 md:gap-10">
+          <h1 className="max-w-4xl flex-1 text-3xl font-extrabold leading-tight tracking-tight md:text-5xl">
+            Cuando la defensa presiona al QB, ¿tomó la mejor decisión? Y si no, ¿qué probabilidad había de que la jugada saliera mejor?
+          </h1>
+          <img src="brand/nfl.png" alt="Logo de la NFL" className="hidden h-36 w-auto shrink-0 drop-shadow-xl sm:block md:h-48" />
+        </div>
         <p className="mt-4 max-w-3xl text-muted">
-          Picksixers revisa {meta.plays.toLocaleString()} dropbacks reales de {meta.games} partidos y compara lo que hizo el QB con lo que pasó en
+          PickSixers revisa {meta.plays.toLocaleString()} dropbacks reales de {meta.games} partidos y compara lo que hizo el QB con lo que pasó en
           jugadas parecidas. El resultado es una recomendación y una probabilidad con su margen de confianza, que un head coach puede usar en la sala de video y en el plan de juego.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">

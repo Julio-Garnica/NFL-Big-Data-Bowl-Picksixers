@@ -9,7 +9,7 @@ from fastapi.staticfiles import StaticFiles
 
 from .model import Engine, Scenario
 
-app = FastAPI(title="Picksixers - Decisiones bajo presión")
+app = FastAPI(title="PickSixers - Decisiones bajo presión")
 _engine: Engine | None = None
 
 

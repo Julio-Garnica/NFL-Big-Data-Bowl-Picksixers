@@ -1,4 +1,4 @@
-# Picksixers: decisiones bajo presión
+# PickSixers: decisiones bajo presión
 
 **Pregunta:** cuando la defensa presiona al QB, ¿tomó la mejor decisión? Y si no, ¿qué probabilidad había de que la jugada saliera mejor con la decisión que recomiendan los datos?
 
