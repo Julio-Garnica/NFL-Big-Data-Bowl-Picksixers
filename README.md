@@ -1,6 +1,6 @@
 # PickSixers: decisiones bajo presión
 
-**Pregunta:** cuando la defensa presiona al QB, ¿tomó la mejor decisión? Y si no, ¿qué probabilidad había de que la jugada saliera mejor con la decisión que recomiendan los datos?
+**Pregunta:** cuando la defensa presiona al QB, ¿Tomó la mejor decisión? Y si no, ¿Qué probabilidad había de que la jugada saliera mejor con la decisión que recomiendan los datos?
 
 Datos: NFL Big Data Bowl 2023 (temporada 2021, semanas 1-8), PFF y tracking. Fotos (nfl.com) y logos (ESPN) vía nflverse.
 

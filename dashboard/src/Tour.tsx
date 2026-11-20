@@ -27,7 +27,7 @@ type Step = { route: string; target?: string; text: string; cheer?: boolean }
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 const P = (v: number | null | undefined) => `${Math.round((v ?? 0) * 100)} %`
 /** Texto para la voz: sin simbolos que el sintetizador lea mal. */
-const speakable = (s: string) => s.replace(/(\d+)\s?%/g, '$1 por ciento').replace(/\bQB\b/g, 'quarterback').replace(/–/g, ' a ')
+const speakable = (s: string) => s.replace(/(\d+)\s?%/g, '$1 por ciento').replace(/\bQB\b/g, 'quarterback').replace(/\bHC\b/g, 'head coach').replace(/–/g, ' a ')
 
 // Mismos valores iniciales que el Simulador, para que lo narrado coincida con lo que se ve.
 const SIM_QS = 'down=3&ytg=7&yardsToEndzone=45&rushers=5&blockers=5&coverageType=Man&formation=SHOTGUN&playAction=false&rollout=false'
@@ -48,7 +48,7 @@ async function buildSteps(): Promise<Step[]> {
   const R = `revision/${TOUR_PLAY[0]}/${TOUR_PLAY[1]}`
   return [
     { route: 'inicio', target: 'h1',
-      text: `Soy el head coach de los Steelers. Mi pregunta: cuando presionan a mi QB, ¿tomó la mejor decisión? Y si no, ¿qué tan probable era que saliera mejor?` },
+      text: `Soy Mike Tomlin, HC de los Steelers. Mi pregunta: cuando presionan a mi QB, ¿Tomó la mejor decisión? Y si no, ¿Qué tan probable era que saliera mejor?` },
     { route: 'inicio', target: '#tour-metodo',
       text: `La app califica cada jugada como exitosa, neutra o negativa, y la compara con jugadas parecidas bajo la misma presión.` },
     { route: `ofensivas/${MY_TEAM}`,
@@ -210,10 +210,10 @@ export default function Tour({ go, onClose, autostart }: { go: (p: string) => vo
         <div className="flex items-center gap-4 bg-gradient-to-r from-black to-[#3a2c00] p-6">
           <span className="rounded-full bg-white p-1"><TeamLogo abbr={MY_TEAM} size="h-14 w-14" /></span>
           <div><div className="text-xs font-semibold uppercase tracking-widest text-[#FFB612]">Tour narrado · cerca de 1 minuto</div>
-            <h2 className="text-2xl font-extrabold leading-tight">Un día con el head coach de los Steelers</h2></div>
+            <h2 className="text-2xl font-extrabold leading-tight">Un día con Mike Tomlin, HC de los Steelers</h2></div>
         </div>
         <div className="space-y-3 p-6 text-sm text-white/80">
-          <p>El head coach recorre la app con voz: cómo se responde la pregunta, su línea y su QB, una jugada real de Ben Roethlisberger con su veredicto y la regla que se lleva al plan de juego.</p>
+          <p>Mike Tomlin recorre la app con voz: cómo se responde la pregunta, su línea y su QB, una jugada real de Ben Roethlisberger con su veredicto y la regla que se lleva al plan de juego.</p>
           {!hasVoice && <p className="text-[#FFB612]">Tu navegador no tiene voz sintetizada: verás el tour con subtítulos.</p>}
           {err && <p className="text-red-300">No se pudo preparar el tour: {err}</p>}
           <div className="flex flex-wrap gap-3 pt-2">
@@ -247,7 +247,7 @@ export default function Tour({ go, onClose, autostart }: { go: (p: string) => vo
               <div className="hidden shrink-0 flex-col items-center sm:flex">
                 <span className="rounded-full bg-white p-0.5"><TeamLogo abbr={MY_TEAM} size="h-11 w-11" /></span>
                 <span className="mt-1 flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-[#FFB612]">
-                  <span className={`h-1.5 w-1.5 rounded-full bg-red-500 ${paused ? '' : 'animate-pulse'}`} /> Head coach</span>
+                  <span className={`h-1.5 w-1.5 rounded-full bg-red-500 ${paused ? '' : 'animate-pulse'}`} /> Mike Tomlin · HC</span>
               </div>
               <p key={idx} className="fade-in min-w-0 flex-1 text-base font-medium leading-snug md:text-lg">{s?.text ?? 'Preparando…'}</p>
               <div className="flex shrink-0 flex-col items-end gap-2">

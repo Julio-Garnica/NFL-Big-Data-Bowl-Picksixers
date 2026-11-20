@@ -31,10 +31,10 @@ export default function Home({ meta, go }: { meta: any; go: (p: string) => void 
       {/* ---------------------------------------------------------------- la pregunta */}
       <section className="fade-in relative overflow-hidden rounded-3xl border border-line p-8 shadow-card md:p-12"
         style={{ background: 'linear-gradient(135deg, rgb(var(--accent) / 0.20), rgb(var(--accent2) / 0.16) 55%, rgb(var(--surface)))' }}>
-        <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-accent"><Icon name="question" className="h-4 w-4" /> La pregunta que respondemos</p>
+        <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-accent"><Icon name="question" className="h-4 w-4" /> La pregunta que respondemos:</p>
         <div className="mt-3 flex items-center gap-6 md:gap-10">
           <h1 className="max-w-4xl flex-1 text-3xl font-extrabold leading-tight tracking-tight md:text-5xl">
-            Cuando la defensa presiona al QB, ¿tomó la mejor decisión? Y si no, ¿qué probabilidad había de que la jugada saliera mejor?
+            Cuando la defensa presiona al QB, ¿Tomó la mejor decisión? Y si no, ¿Qué probabilidad había de que la jugada saliera mejor?
           </h1>
           <img src="brand/nfl.png" alt="Logo de la NFL" className="hidden h-36 w-auto shrink-0 drop-shadow-xl sm:block md:h-48" />
         </div>

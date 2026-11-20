@@ -1,5 +1,6 @@
 ﻿import { useEffect, useMemo, useState } from 'react'
 import { G } from './glossary'
+import PlayField from './PlayField'
 import { useCheerOnSelect } from './steelers'
 import { ACTIONS, CiBar, OptionTierChart, PersonChip, TierBadge, VERDICTS, VerdictBadge } from './shared'
 import { Badge, Card, Field, Headshot, Icon, Info, Loading, Stat, TeamLogo, getJson, num, pct, selectCls, useApi } from './ui'
@@ -228,6 +229,9 @@ function PlayReview({ gameId, playId, go }: { gameId: number; playId: number; go
             </div>)}
         </div>
       </section>
+
+      {/* ------------------------------------------------ desarrollo de la jugada */}
+      <PlayField gameId={gameId} playId={playId} />
 
       {/* ------------------------------------------------ evidencia */}
       {rec && !rec.deterministic && a.similar.length > 0 && (

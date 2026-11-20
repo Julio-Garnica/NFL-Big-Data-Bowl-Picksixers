@@ -57,6 +57,11 @@ def review(game_id: int, play_id: int) -> dict:
     return _need(engine().play_review(game_id, play_id), "Jugada no encontrada")
 
 
+@app.get("/api/tracking/{game_id}/{play_id}")
+def tracking(game_id: int, play_id: int) -> dict:
+    return _need(engine().tracking(game_id, play_id), "Tracking no encontrado")
+
+
 @app.get("/api/review-random")
 def review_random(verdict: str | None = Query(None, pattern="^(exitosa|coincide|mejor|incierto|no_mejor)$"),
                   pressure: int | None = Query(None, ge=0, le=1), team: str | None = Query(None, max_length=3),

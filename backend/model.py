@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 
 import numpy as np
@@ -30,6 +31,14 @@ def _f(x, nd: int = 4):
     except (TypeError, ValueError):
         return None
     return None if math.isnan(x) or math.isinf(x) else round(x, nd)
+
+
+@lru_cache(maxsize=4)
+def _tracking_game(game_id: int) -> pd.DataFrame:
+    """Tracking de un partido (se lee bajo demanda; se guardan los 4 ultimos en memoria)."""
+    f = DATA / "tracking" / f"tracking_{game_id}.csv"
+    return pd.read_csv(f, usecols=["playId", "nflId", "frameId", "jerseyNumber", "team", "playDirection", "x", "y", "s", "event"],
+                       na_values=["NA"])
 
 
 def _sigmoid(z):
@@ -577,6 +586,53 @@ class Engine:
                         "blitzRate": _f((d[m].nRush >= 5).mean()), "successAllowed": _f((t[m].tier == 2).mean()),
                         "dropbacks": int(m.sum())})
         return out
+
+    # ================================================================== desarrollo de la jugada (tracking)
+    def tracking(self, game_id: int, play_id: int) -> dict | None:
+        i = self.review.row(game_id, play_id)
+        if i is None or not (DATA / "tracking" / f"tracking_{game_id}.csv").exists():
+            return None
+        r = self.df.iloc[i]
+        t = _tracking_game(game_id)
+        t = t[t.playId == play_id]
+        if t.empty:
+            return None
+        flip = t.playDirection.iat[0] == "left"
+        x = (120 - t.x if flip else t.x).round(2)
+        y = (53.3 - t.y if flip else t.y).round(2)
+        t = t.assign(x=x, y=y)
+        frames = sorted(t.frameId.unique().tolist())
+        ev = t[t.event.notna() & (t.event != "None")].groupby("frameId").event.first()
+        events = [{"frame": int(f), "event": e} for f, e in ev.items()]
+        snap = next((e["frame"] for e in events if e["event"] in ("ball_snap", "autoevent_ballsnap")), frames[0])
+        ball = t[t.team == "football"].set_index("frameId")
+        los = float(ball.x.get(snap, ball.x.iloc[0]))
+        s = self.scout[(self.scout.gameId == game_id) & (self.scout.playId == play_id)].set_index("nflId")
+        pressers = {int(k) for k in s.index[(s[["pff_hit", "pff_hurry", "pff_sack"]].fillna(0).sum(1) > 0)]}
+        beaten = {int(k) for k in s.index[s.pff_beatenByDefender.fillna(0) > 0]}
+        players = []
+        pos = []
+        for pid, g in t[t.team != "football"].groupby("nflId"):
+            g = g.set_index("frameId").reindex(frames)
+            pid = int(pid)
+            role = s.pff_role.get(pid) if pid in s.index else None
+            players.append({
+                "id": pid, "name": self.pinfo.displayName.get(pid), "jersey": None if pd.isna(g.jerseyNumber.dropna().iat[0]) else int(g.jerseyNumber.dropna().iat[0]),
+                "team": g.team.dropna().iat[0], "side": "off" if g.team.dropna().iat[0] == r.possessionTeam else "def",
+                "role": role, "spot": s.pff_positionLinedUp.get(pid) if pid in s.index else None,
+                "isQb": role == "Pass", "pressed": pid in pressers, "beaten": pid in beaten,
+                "position": self.pinfo.officialPosition.get(pid), "headshot": self.headshots.get(pid),
+            })
+            pos.append([[None if pd.isna(a) else float(a), None if pd.isna(b) else float(b)] for a, b in zip(g.x, g.y)])
+        b = ball.reindex(frames)
+        return {
+            "gameId": game_id, "playId": play_id, "frames": len(frames), "fps": 10, "snapIndex": frames.index(snap),
+            "events": [{"index": frames.index(e["frame"]), "event": e["event"]} for e in events],
+            "los": los, "firstDown": min(los + float(r.yardsToGo), 110.0),
+            "offense": self.team_info(r.possessionTeam), "defense": self.team_info(r.defensiveTeam),
+            "players": players, "positions": pos,
+            "ball": [[None if pd.isna(a) else float(a), None if pd.isna(c) else float(c)] for a, c in zip(b.x, b.y)],
+        }
 
     # ================================================================== directorio
     def bio(self, pid: int) -> dict:
