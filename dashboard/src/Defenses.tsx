@@ -128,7 +128,7 @@ function TeamProfile({ team, go }: { team: string; go: (p: string) => void }) {
             {list.map(p => (
               <button key={p.id} type="button" onClick={() => go(`defensas/${team}/${p.id}`)}
                 className="flex gap-3 rounded-2xl border border-line p-3 text-left transition hover:-translate-y-0.5 hover:border-accent">
-                <Headshot url={p.headshot} name={p.name} size="h-16 w-16" />
+                <Headshot url={p.headshot} name={p.name} team={p.team} size="h-16 w-16" />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-1"><span className="truncate font-semibold">{p.name}</span><Badge tone="accent">{p.position}</Badge></div>
                   <div className="mt-2 grid grid-cols-3 gap-1 text-xs">
@@ -174,7 +174,7 @@ function DefenderProfile({ team, pid, go }: { team: string; pid: number; go: (p:
       <section className="fade-in overflow-hidden rounded-3xl border border-line shadow-card"
         style={{ background: `linear-gradient(120deg, ${t?.color ?? '#334155'}dd, ${t?.color2 ?? '#64748b'}99 65%, rgb(var(--surface)))` }}>
         <div className="flex flex-wrap items-end gap-6 p-6 text-white">
-          <Headshot url={p.headshot} name={p.name} size="h-32 w-32" ring="ring-white/70" />
+          <Headshot url={p.headshot} name={p.name} team={p.team} size="h-32 w-32" ring="ring-white/70" />
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 text-sm opacity-90"><span className="rounded bg-white/90 p-0.5"><TeamLogo abbr={p.team} size="h-6 w-6" /></span>{t?.name} · {p.position} ({p.group})</div>
             <h2 className="text-4xl font-extrabold drop-shadow">{p.name}</h2>
@@ -257,4 +257,6 @@ function DefenderProfile({ team, pid, go }: { team: string; pid: number; go: (p:
     </div>
   )
 }
+
+
 

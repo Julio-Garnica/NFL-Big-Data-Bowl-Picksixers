@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+﻿import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
+import { useCheer } from './steelers'
 import { useTheme } from './theme'
 
 // ---------------------------------------------------------------- datos
@@ -187,9 +188,10 @@ export function Meter({ v, tone = 'accent', marker }: { v: number | null; tone?:
 // ---------------------------------------------------------------- imagenes
 const initials = (n?: string | null) => (n ?? '?').split(' ').filter(Boolean).slice(0, 2).map(p => p[0]).join('').toUpperCase()
 
-export function Headshot({ url, name, size = 'h-14 w-14', ring = 'ring-line', className = '' }: {
-  url?: string | null; name?: string | null; size?: string; ring?: string; className?: string
+export function Headshot({ url, name, team, size = 'h-14 w-14', ring = 'ring-line', className = '' }: {
+  url?: string | null; name?: string | null; team?: string | null; size?: string; ring?: string; className?: string
 }) {
+  useCheer(team)
   const [broken, setBroken] = useState(false)
   useEffect(() => setBroken(false), [url])
   return (
@@ -202,6 +204,7 @@ export function Headshot({ url, name, size = 'h-14 w-14', ring = 'ring-line', cl
 }
 
 export function TeamLogo({ abbr, size = 'h-8 w-8', className = '' }: { abbr?: string | null; size?: string; className?: string }) {
+  useCheer(abbr)
   const [broken, setBroken] = useState(false)
   if (!abbr) return null
   return broken
@@ -234,3 +237,4 @@ export function Icon({ name, className = 'h-5 w-5' }: { name: string; className?
     </svg>
   )
 }
+

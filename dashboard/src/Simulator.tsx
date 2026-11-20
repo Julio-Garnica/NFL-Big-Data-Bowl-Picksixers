@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+﻿import { useMemo, useState } from 'react'
 import { Bar, BarChart, CartesianGrid, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { G } from './glossary'
 import { OptionTierChart } from './shared'
@@ -59,7 +59,7 @@ export default function Simulator({ meta }: { meta: any }) {
               <select className={selectCls} value={defTeam} onChange={e => setDefTeam(e.target.value)}>
                 <option value="">Promedio de liga</option>{meta.teams.map((t: any) => <option key={t.abbr} value={t.abbr}>{t.name}</option>)}</select></div></Field>
           <Field label="Mi quarterback" info={G.corredor}>
-            <div className="flex items-center gap-2">{qbObj && <Headshot url={qbObj.headshot} name={qbObj.name} size="h-8 w-8" />}
+            <div className="flex items-center gap-2">{qbObj && <Headshot url={qbObj.headshot} name={qbObj.name} team={qbObj.team} size="h-8 w-8" />}
               <select className={selectCls} value={qb} onChange={e => setQb(e.target.value)}>
                 <option value="">No especificado</option>{meta.qbs.map((q: any) => <option key={q.id} value={q.id}>{q.name}</option>)}</select></div></Field>
         </div>
@@ -135,3 +135,4 @@ export default function Simulator({ meta }: { meta: any }) {
     </div>
   )
 }
+

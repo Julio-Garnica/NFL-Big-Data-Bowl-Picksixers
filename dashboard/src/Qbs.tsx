@@ -28,7 +28,7 @@ function QbGrid({ go }: { go: (p: string) => void }) {
             className="fade-in overflow-hidden rounded-2xl border border-line bg-surface text-left shadow-card transition hover:-translate-y-0.5 hover:border-accent">
             <div className="h-1.5" style={{ background: `linear-gradient(90deg, ${q.teamInfo?.color}, ${q.teamInfo?.color2})` }} />
             <div className="flex gap-3 p-4">
-              <Headshot url={q.headshot} name={q.name} size="h-16 w-16" />
+              <Headshot url={q.headshot} name={q.name} team={q.teamInfo?.abbr} size="h-16 w-16" />
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2"><span className="truncate font-semibold">{q.name}</span><TeamLogo abbr={q.teamInfo?.abbr} size="h-5 w-5" />
                   {q.mobile && <Badge tone="accent2">Corredor<Info text={G.corredor} /></Badge>}</div>
@@ -64,7 +64,7 @@ function QbProfile({ id, go }: { id: number; go: (p: string) => void }) {
       <section className="fade-in overflow-hidden rounded-3xl border border-line shadow-card"
         style={{ background: `linear-gradient(120deg, ${t?.color ?? '#334155'}dd, ${t?.color2 ?? '#64748b'}99 65%, rgb(var(--surface)))` }}>
         <div className="flex flex-wrap items-end gap-6 p-6 text-white">
-          <Headshot url={q.headshot} name={q.name} size="h-32 w-32" ring="ring-white/70" />
+          <Headshot url={q.headshot} name={q.name} team={q.teamInfo?.abbr} size="h-32 w-32" ring="ring-white/70" />
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 text-sm opacity-90"><span className="rounded bg-white/90 p-0.5"><TeamLogo abbr={t?.abbr} size="h-6 w-6" /></span>{t?.name} · QB</div>
             <h2 className="text-4xl font-extrabold drop-shadow">{q.name}</h2>
@@ -171,4 +171,6 @@ function QbProfile({ id, go }: { id: number; go: (p: string) => void }) {
     </div>
   )
 }
+
+
 

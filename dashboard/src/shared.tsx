@@ -1,4 +1,4 @@
-import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+﻿import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { G } from './glossary'
 import { Badge, ChartCard, Headshot, Info, TeamLogo, pct, useChart } from './ui'
 
@@ -72,7 +72,7 @@ export function PersonChip({ p, sub, onClick }: { p: any; sub?: string; onClick?
   return (
     <El type={onClick ? 'button' : undefined} onClick={onClick}
       className={`flex items-center gap-3 rounded-xl border border-line bg-soft/50 p-2 pr-3 text-left ${onClick ? 'transition hover:border-accent' : ''}`}>
-      <Headshot url={p.headshot} name={p.name} size="h-11 w-11" />
+      <Headshot url={p.headshot} name={p.name} team={p.team} size="h-11 w-11" />
       <div className="min-w-0">
         <div className="flex items-center gap-1.5 truncate text-sm font-semibold">{p.name}<TeamLogo abbr={p.team} size="h-4 w-4" /></div>
         <div className="truncate text-xs text-muted">{[p.position, sub].filter(Boolean).join(' · ')}</div>
@@ -98,3 +98,4 @@ export function CiBar({ p, ci }: { p: number | null; ci: (number | null)[] }) {
     </div>
   )
 }
+

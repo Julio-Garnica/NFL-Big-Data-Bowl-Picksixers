@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+﻿import { useMemo, useState } from 'react'
 import { G } from './glossary'
 import { Badge, Card, Field, Headshot, Info, Loading, Segmented, TeamLogo, selectCls, useApi } from './ui'
 
@@ -51,7 +51,7 @@ export default function Players({ go }: { go: (p: string) => void }) {
           const link = p.hasQbProfile ? `qbs/${p.id}` : p.hasDefProfile && p.team ? `defensas/${p.team}/${p.id}` : null
           return (
             <article key={p.id} className="fade-in flex gap-4 rounded-2xl border border-line bg-surface p-4 shadow-card">
-              <Headshot url={p.headshot} name={p.name} size="h-20 w-20" />
+              <Headshot url={p.headshot} name={p.name} team={p.team} size="h-20 w-20" />
               <div className="min-w-0 flex-1">
                 <div className="flex items-start justify-between gap-2">
                   <h4 className="truncate font-semibold leading-tight">{p.name}</h4><Badge tone="accent">{p.position}</Badge></div>
@@ -73,3 +73,4 @@ export default function Players({ go }: { go: (p: string) => void }) {
     </div>
   )
 }
+

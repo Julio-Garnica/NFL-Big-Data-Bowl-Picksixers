@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+﻿import { useEffect, useMemo, useState } from 'react'
 import { G } from './glossary'
 import { ACTIONS, CiBar, OptionTierChart, PersonChip, TierBadge, VERDICTS, VerdictBadge } from './shared'
 import { Badge, Card, Field, Headshot, Icon, Info, Loading, Stat, TeamLogo, getJson, num, pct, selectCls, useApi } from './ui'
@@ -242,8 +242,9 @@ function PlayReview({ gameId, playId, go }: { gameId: number; playId: number; go
           </div>
           <p className="mt-2 text-xs text-muted">El nivel (exitosa, neutra o negativa) se mide con lo que necesitaba <b>esta</b> jugada ({num(a.required, 1)} yd). Haz clic para revisarlas.</p>
         </Card>)}
-      {p.qb && <div className="flex items-center gap-3 text-sm text-muted"><Headshot url={p.qb.headshot} name={p.qb.name} size="h-8 w-8" />
+      {p.qb && <div className="flex items-center gap-3 text-sm text-muted"><Headshot url={p.qb.headshot} name={p.qb.name} team={p.qb.team} size="h-8 w-8" />
         ¿Quieres ver cómo reacciona {p.qb.name} en general? <button type="button" className="font-semibold text-accent hover:underline" onClick={() => go(`qbs/${p.qb.id}`)}>Ver su perfil</button></div>}
     </div>
   )
 }
+

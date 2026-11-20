@@ -9,7 +9,7 @@ import { Icon, Loading, useApi, useRoute } from './ui'
 
 export const NAV = [
   { id: 'inicio', label: 'Inicio', icon: 'home', hint: 'La pregunta y cómo se responde' },
-  { id: 'revision', label: 'Revisión de jugadas', icon: 'review', hint: '¿Habría salido mejor?' },
+  { id: 'revision', label: 'Revisión de jugadas', icon: 'review', hint: '¿Habría salido mejor la jugada?' },
   { id: 'simulador', label: 'Simulador', icon: 'target', hint: '¿Qué pasaría si…?' },
   { id: 'defensas', label: 'Defensas', icon: 'shield', hint: 'Perfiles de equipos y defensivos' },
   { id: 'qbs', label: 'Quarterbacks', icon: 'qb', hint: 'Cómo reacciona cada QB' },
@@ -24,46 +24,60 @@ export default function App() {
   const cur = NAV.find(n => n.id === page)!
 
   return (
-    <div className="min-h-screen md:flex">
-      <aside className="border-line bg-surface md:sticky md:top-0 md:h-screen md:w-64 md:shrink-0 md:border-r">
-        <button type="button" onClick={() => go('inicio')} className="flex items-center gap-3 px-5 py-4 text-left">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent2 text-sm font-black text-onaccent shadow">P6</span>
-          <div><div className="font-bold leading-tight">Picksixers</div><div className="text-xs text-muted">Decisiones bajo presión</div></div>
-        </button>
-        <nav className="flex gap-1 overflow-x-auto px-3 pb-3 md:flex-col md:overflow-visible">
+    <div className="flex min-h-screen flex-col">
+      <header className="sticky top-0 z-30 border-b border-line bg-surface/85 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-2.5 md:px-6">
+          <button type="button" onClick={() => go('inicio')} className="flex shrink-0 items-center gap-3 text-left" title="Inicio">
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-white p-1 shadow ring-1 ring-black/5">
+              <img src="brand/unam.svg" alt="Escudo de la UNAM" className="h-full w-full object-contain" />
+            </span>
+            <span className="hidden sm:block"><span className="block font-bold leading-tight">Picksixers</span>
+              <span className="block text-xs text-muted">Decisiones bajo presión · UNAM</span></span>
+          </button>
+
+          <nav className="hidden flex-1 items-center justify-center gap-1 lg:flex" aria-label="Secciones">
+            {NAV.map(n => (
+              <a key={n.id} href={`#/${n.id}`} title={n.hint} aria-current={page === n.id ? 'page' : undefined}
+                className={`flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition ${page === n.id ? 'bg-accent/15 text-accent' : 'text-muted hover:bg-soft hover:text-fg'}`}>
+                <Icon name={n.icon} className="h-4 w-4" />{n.label}</a>))}
+          </nav>
+
+          <div className="ml-auto flex items-center gap-2 lg:ml-0">
+            <Icon name="palette" className="h-4 w-4 text-muted" />
+            <label htmlFor="tema" className="sr-only">Tema</label>
+            <select id="tema" value={theme} onChange={e => setTheme(e.target.value)}
+              className="rounded-lg border border-line bg-soft px-2 py-1.5 text-sm outline-none">
+              {Object.entries(THEMES).map(([k, t]) => <option key={k} value={k}>{t.label}</option>)}
+            </select>
+          </div>
+        </div>
+        {/* Navegacion en pantallas medianas y pequenas */}
+        <nav className="flex gap-1 overflow-x-auto px-3 pb-2 lg:hidden" aria-label="Secciones">
           {NAV.map(n => (
             <a key={n.id} href={`#/${n.id}`} aria-current={page === n.id ? 'page' : undefined}
-              className={`flex shrink-0 items-center gap-3 rounded-xl px-3 py-2.5 transition ${page === n.id ? 'bg-accent/15 text-accent' : 'text-muted hover:bg-soft hover:text-fg'}`}>
-              <Icon name={n.icon} />
-              <span><span className="block text-sm font-medium">{n.label}</span>
-                <span className="hidden text-[11px] opacity-80 md:block">{n.hint}</span></span>
-            </a>))}
+              className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium ${page === n.id ? 'bg-accent/15 text-accent' : 'text-muted hover:bg-soft'}`}>
+              <Icon name={n.icon} className="h-4 w-4" />{n.label}</a>))}
         </nav>
-        <div className="hidden px-5 pt-2 md:block">
-          <label className="mb-1 block text-xs font-medium text-muted" htmlFor="tema">Tema</label>
-          <select id="tema" value={theme} onChange={e => setTheme(e.target.value)}
-            className="w-full rounded-lg border border-line bg-soft px-2.5 py-2 text-sm outline-none">
-            {Object.entries(THEMES).map(([k, t]) => <option key={k} value={k}>{t.label}</option>)}
-          </select>
-          <p className="mt-6 text-[11px] leading-relaxed text-muted">Datos: NFL Big Data Bowl 2023 (temporada 2021, semanas 1-8), PFF y tracking. Fotos y logos: nfl.com y ESPN vía nflverse.</p>
-        </div>
-      </aside>
+      </header>
 
-      <div className="min-w-0 flex-1">
-        <header className="sticky top-0 z-20 border-b border-line bg-bg/80 px-6 py-3 backdrop-blur">
-          <h1 className="text-lg font-bold">{cur.label}</h1>
-          <p className="text-xs text-muted">{cur.hint}</p>
-        </header>
-        <main className="mx-auto max-w-7xl p-4 md:p-6">
-          {!meta ? <Loading error={error} /> :
-            page === 'inicio' ? <Home meta={meta} go={go} /> :
-            page === 'revision' ? <Review meta={meta} parts={parts.slice(1)} go={go} /> :
-            page === 'simulador' ? <Simulator meta={meta} /> :
-            page === 'defensas' ? <Defenses meta={meta} parts={parts.slice(1)} go={go} /> :
-            page === 'qbs' ? <Qbs meta={meta} parts={parts.slice(1)} go={go} /> :
-            <Players go={go} />}
-        </main>
-      </div>
+      <main className="mx-auto w-full max-w-7xl flex-1 p-4 md:p-6">
+        {page !== 'inicio' && (
+          <div className="mb-5">
+            <h1 className="text-2xl font-bold">{cur.label}</h1>
+            <p className="text-sm text-muted">{cur.hint}</p>
+          </div>)}
+        {!meta ? <Loading error={error} /> :
+          page === 'inicio' ? <Home meta={meta} go={go} /> :
+          page === 'revision' ? <Review meta={meta} parts={parts.slice(1)} go={go} /> :
+          page === 'simulador' ? <Simulator meta={meta} /> :
+          page === 'defensas' ? <Defenses meta={meta} parts={parts.slice(1)} go={go} /> :
+          page === 'qbs' ? <Qbs meta={meta} parts={parts.slice(1)} go={go} /> :
+          <Players go={go} />}
+      </main>
+
+      <footer className="border-t border-line px-6 py-4 text-center text-xs text-muted">
+        Datos: NFL Big Data Bowl 2023 (temporada 2021, semanas 1-8), PFF y tracking. Fotos y logos: nfl.com y ESPN vía nflverse. Escudo de la UNAM: Wikimedia Commons (dominio público).
+      </footer>
     </div>
   )
 }

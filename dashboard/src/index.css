@@ -22,3 +22,10 @@
   .fade-in { animation: fade .35s ease both; }
 }
 @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* Celebracion de los Steelers */
+.steelers-pop { animation: steelers-pop .45s cubic-bezier(.2, 1.4, .4, 1) both; }
+.steelers-wave { animation: steelers-wave .6s ease-in-out 3 alternate; }
+@keyframes steelers-pop { from { opacity: 0; transform: translate(-50%, -16px) scale(.85); } to { opacity: 1; transform: translate(-50%, 0) scale(1); } }
+@keyframes steelers-wave { from { transform: rotate(-12deg); } to { transform: rotate(12deg); } }
+@media (prefers-reduced-motion: reduce) { .steelers-pop, .steelers-wave { animation: none; } }
