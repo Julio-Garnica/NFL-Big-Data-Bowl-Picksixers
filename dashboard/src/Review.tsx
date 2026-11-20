@@ -1,5 +1,6 @@
 ﻿import { useEffect, useMemo, useState } from 'react'
 import { G } from './glossary'
+import { useCheerOnSelect } from './steelers'
 import { ACTIONS, CiBar, OptionTierChart, PersonChip, TierBadge, VERDICTS, VerdictBadge } from './shared'
 import { Badge, Card, Field, Headshot, Icon, Info, Loading, Stat, TeamLogo, getJson, num, pct, selectCls, useApi } from './ui'
 
@@ -13,6 +14,7 @@ export default function Review({ meta, parts, go }: { meta: any; parts: string[]
   const [onlyPressure, setOnlyPressure] = useState(true)
   const [onlyFailed, setOnlyFailed] = useState(true)
   const [seed, setSeed] = useState(1)
+  const cheerIf = useCheerOnSelect()
   const game = games?.find(g => g.gameId === gameId)
 
   // Al abrir una jugada desde un enlace, preselecciona un equipo del partido (solo una vez por partido).
@@ -36,7 +38,7 @@ export default function Review({ meta, parts, go }: { meta: any; parts: string[]
             <button type="button" onClick={() => setTeam('')} title="Todos"
               className={`col-span-8 mb-1 rounded-lg px-2 py-1 text-xs font-semibold ${!team ? 'bg-accent text-onaccent' : 'bg-soft text-muted'}`}>Todos los equipos</button>
             {meta.teams.map((t: any) => (
-              <button key={t.abbr} type="button" onClick={() => setTeam(t.abbr)} title={t.name}
+              <button key={t.abbr} type="button" onClick={() => { setTeam(t.abbr); cheerIf(t.abbr) }} title={t.name}
                 className={`rounded-lg p-1 transition ${team === t.abbr ? 'bg-accent/20 ring-2 ring-accent' : 'hover:bg-soft'}`}>
                 <TeamLogo abbr={t.abbr} size="h-7 w-7" /></button>))}
           </div>

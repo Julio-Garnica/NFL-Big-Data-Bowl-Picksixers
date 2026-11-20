@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Bar, CartesianGrid, ComposedChart, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { G } from './glossary'
 import { PersonChip } from './shared'
+import { useCheer } from './steelers'
 import { Badge, Card, ChartCard, Headshot, Icon, Info, Loading, Meter, Segmented, Stat, TeamLogo, VsLeague, num, pct, useApi, useChart } from './ui'
 
 export default function Offenses({ parts, go }: { parts: string[]; go: (p: string) => void }) {
@@ -49,6 +50,7 @@ function OffenseGrid({ go }: { go: (p: string) => void }) {
 
 // ---------------------------------------------------------------- perfil de la ofensiva
 function OffenseProfile({ team, go }: { team: string; go: (p: string) => void }) {
+  useCheer(team)
   const { data: o, error } = useApi(`api/offense/${team}`)
   const { grid, tick, tooltip, legend, c } = useChart()
   if (!o) return <Loading error={error} />

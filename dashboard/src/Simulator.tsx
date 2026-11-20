@@ -2,6 +2,7 @@
 import { Bar, BarChart, CartesianGrid, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { G } from './glossary'
 import { OptionTierChart } from './shared'
+import { useCheerOnSelect } from './steelers'
 import { Card, ChartCard, Field, Headshot, Info, Loading, Segmented, Stat, TeamLogo, num, pct, selectCls, useApi, useChart } from './ui'
 
 export default function Simulator({ meta }: { meta: any }) {
@@ -18,6 +19,7 @@ export default function Simulator({ meta }: { meta: any }) {
   const [defTeam, setDefTeam] = useState('')
   const [qb, setQb] = useState('')
   const { grid, tick, tooltip, c } = useChart()
+  const cheerIf = useCheerOnSelect()
 
   const url = useMemo(() => {
     const q = new URLSearchParams({ down: String(down), ytg: String(ytg), yardsToEndzone: String(yte), rushers: String(rushers),
@@ -52,15 +54,15 @@ export default function Simulator({ meta }: { meta: any }) {
           </div>
           <Field label="Mi ofensiva" info="Ajusta la probabilidad de presión según cómo protege este equipo.">
             <div className="flex items-center gap-2"><TeamLogo abbr={offTeam || null} size="h-7 w-7" />
-              <select className={selectCls} value={offTeam} onChange={e => setOffTeam(e.target.value)}>
+              <select className={selectCls} value={offTeam} onChange={e => { setOffTeam(e.target.value); cheerIf(e.target.value) }}>
                 <option value="">Promedio de liga</option>{meta.teams.map((t: any) => <option key={t.abbr} value={t.abbr}>{t.name}</option>)}</select></div></Field>
           <Field label="Defensa rival" info="Ajusta la probabilidad de presión según cuánto presiona esta defensa.">
             <div className="flex items-center gap-2"><TeamLogo abbr={defTeam || null} size="h-7 w-7" />
-              <select className={selectCls} value={defTeam} onChange={e => setDefTeam(e.target.value)}>
+              <select className={selectCls} value={defTeam} onChange={e => { setDefTeam(e.target.value); cheerIf(e.target.value) }}>
                 <option value="">Promedio de liga</option>{meta.teams.map((t: any) => <option key={t.abbr} value={t.abbr}>{t.name}</option>)}</select></div></Field>
           <Field label="Mi quarterback" info={G.corredor}>
             <div className="flex items-center gap-2">{qbObj && <Headshot url={qbObj.headshot} name={qbObj.name} team={qbObj.team} size="h-8 w-8" />}
-              <select className={selectCls} value={qb} onChange={e => setQb(e.target.value)}>
+              <select className={selectCls} value={qb} onChange={e => { setQb(e.target.value); cheerIf(meta.qbs.find((q: any) => String(q.id) === e.target.value)?.team) }}>
                 <option value="">No especificado</option>{meta.qbs.map((q: any) => <option key={q.id} value={q.id}>{q.name}</option>)}</select></div></Field>
         </div>
       </Card>

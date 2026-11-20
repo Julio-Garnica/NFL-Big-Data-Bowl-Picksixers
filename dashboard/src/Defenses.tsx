@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Bar, BarChart, CartesianGrid, ComposedChart, Legend, Line, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { G } from './glossary'
 import { PersonChip } from './shared'
+import { useCheer } from './steelers'
 import { Badge, Card, ChartCard, Headshot, Icon, Info, Loading, Meter, Segmented, Stat, TeamLogo, VsLeague, num, pct, useApi, useChart } from './ui'
 
 export default function Defenses({ meta, parts, go }: { meta: any; parts: string[]; go: (p: string) => void }) {
@@ -51,6 +52,7 @@ function TeamGrid({ go }: { go: (p: string) => void }) {
 
 // ---------------------------------------------------------------- perfil del equipo
 function TeamProfile({ team, go }: { team: string; go: (p: string) => void }) {
+  useCheer(team)
   const { data: d, error } = useApi(`api/defense/${team}`)
   const { data: roster } = useApi<any[]>(`api/defense/${team}/players`)
   const [grp, setGrp] = useState('Todos')
@@ -155,6 +157,7 @@ function TeamProfile({ team, go }: { team: string; go: (p: string) => void }) {
 // ---------------------------------------------------------------- perfil del defensivo
 function DefenderProfile({ team, pid, go }: { team: string; pid: number; go: (p: string) => void }) {
   const { data: p, error } = useApi(`api/defender/${pid}`)
+  useCheer(p?.team)
   const { grid, tick, tooltip, legend, c } = useChart()
   if (!p) return <Loading error={error} />
   const t = p.teamInfo, b = p.info

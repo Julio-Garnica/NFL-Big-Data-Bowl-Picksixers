@@ -9,10 +9,16 @@ const CLOSE = '\u00D7'
 
 const Ctx = createContext<() => void>(() => {})
 
-/** Llama a la celebracion cuando se monta un elemento del equipo. */
+/** Perfil abierto: celebra una vez cuando el perfil seleccionado es de nuestro equipo. */
 export function useCheer(team?: string | null) {
   const cheer = useContext(Ctx)
   useEffect(() => { if (team === MY_TEAM) cheer() }, [team, cheer])
+}
+
+/** Selector: devuelve una funcion para celebrar cuando el usuario elige a nuestro equipo o a uno de sus jugadores. */
+export function useCheerOnSelect() {
+  const cheer = useContext(Ctx)
+  return (team?: string | null) => { if (team === MY_TEAM) cheer() }
 }
 
 export function SteelersProvider({ children }: { children: ReactNode }) {

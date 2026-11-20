@@ -2,6 +2,7 @@
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { G } from './glossary'
 import { PersonChip } from './shared'
+import { useCheer } from './steelers'
 import { Badge, Card, ChartCard, Headshot, Icon, Info, Loading, Segmented, Stat, TeamLogo, VsLeague, num, pct, useApi, useChart } from './ui'
 
 export default function Qbs({ meta, parts, go }: { meta: any; parts: string[]; go: (p: string) => void }) {
@@ -53,6 +54,7 @@ const MIX: [string, string, string][] = [
 
 function QbProfile({ id, go }: { id: number; go: (p: string) => void }) {
   const { data: q, error } = useApi(`api/qb/${id}`)
+  useCheer(q?.teamInfo?.abbr)
   const { grid, tick, tooltip, legend, c } = useChart()
   if (!q) return <Loading error={error} />
   const t = q.teamInfo
