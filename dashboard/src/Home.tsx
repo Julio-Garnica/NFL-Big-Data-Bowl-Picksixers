@@ -50,7 +50,7 @@ export default function Home({ meta, go }: { meta: any; go: (p: string) => void 
       </section>
 
       {/* ---------------------------------------------------------------- como se responde */}
-      <section>
+      <section id="tour-metodo" className="scroll-mt-24">
         <h2 className="text-xl font-bold">Cómo la respondemos</h2>
         <p className="mb-4 text-sm text-muted">Cuatro pasos, aplicados a cada jugada.</p>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">

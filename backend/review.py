@@ -1,4 +1,4 @@
-﻿"""Revision de jugadas reales: ¿habria salido mejor con la decision que recomiendan los datos?
+"""Revision de jugadas reales: ¿habria salido mejor con la decision que recomiendan los datos?
 
 Cada jugada se clasifica en tres niveles de resultado:
   2 = exitosa : gana las yardas requeridas (40 % de la distancia en 1.er down, 60 % en 2.o, 100 % en 3.o/4.o)
@@ -132,7 +132,8 @@ class Review:
         yards = np.column_stack([probs[k]["yards"] for k in OPTION_KEYS])
         ok = np.column_stack([probs[k]["neff"] >= self.min_eff for k in OPTION_KEYS])
         ok[:, OPTION_KEYS.index("scramble")] &= mobile
-        key = np.where(ok, np.nan_to_num(score, nan=-9) + 1e-3 * np.nan_to_num(yards, nan=0), -np.inf)
+        # Las yardas solo desempatan: 1e-6 por yarda nunca supera una diferencia real de puntaje.
+        key = np.where(ok, np.nan_to_num(score, nan=-9) + 1e-6 * np.nan_to_num(yards, nan=0), -np.inf)
         return np.array(OPTION_KEYS)[np.argmax(key, axis=1)]
 
     # ------------------------------------------------------------------ calculo masivo
