@@ -1,0 +1,20 @@
+.venv/
+.hackathon/.tools/
+.hackathon/.cache/
+.hackathon/.bootstrap/
+.hackathon/setup.log
+node_modules/
+dist/
+__pycache__/
+
+# Llaves y credenciales: nunca al repositorio
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.aws/
+
+# Datos originales del Big Data Bowl (825 MB, licencia de Kaggle): se descargan aparte
+data/
+setup-log.txt

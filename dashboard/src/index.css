@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 243 245 249; --surface: 255 255 255; --soft: 237 241 247; --line: 226 232 240; --fg: 15 23 42;
+  --muted: 100 116 139; --accent: 5 150 105; --onaccent: 255 255 255; --accent2: 37 99 235;
+  --good: 5 150 105; --bad: 220 38 38; --warn: 217 119 6;
+}
+
+@layer base {
+  html { font-family: 'Inter', ui-sans-serif, system-ui, 'Segoe UI', Roboto, sans-serif; }
+  body { @apply bg-bg text-fg antialiased; transition: background-color .25s, color .25s; }
+  th { @apply font-medium; }
+  input[type='range'] { accent-color: rgb(var(--accent)); }
+  input[type='checkbox'] { accent-color: rgb(var(--accent)); }
+  select, input[type='search'], input[type='text'] { color: rgb(var(--fg)); }
+  ::selection { background: rgb(var(--accent) / 0.3); }
+}
+
+@layer components {
+  .fade-in { animation: fade .35s ease both; }
+}
+@keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
