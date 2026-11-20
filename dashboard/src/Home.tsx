@@ -1,5 +1,6 @@
 import { Bar, BarChart, CartesianGrid, LabelList, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { G } from './glossary'
+import Roles from './Roles'
 import { TIERS } from './shared'
 import { Card, ChartCard, Icon, Info, Stat, pct, useChart } from './ui'
 
@@ -104,6 +105,9 @@ export default function Home({ meta, go }: { meta: any; go: (p: string) => void 
           </ChartCard>
         </div>
       </section>
+
+      {/* ---------------------------------------------------------------- roles del cuerpo tecnico */}
+      <Roles go={go} />
 
       {/* ---------------------------------------------------------------- guia */}
       <section>
