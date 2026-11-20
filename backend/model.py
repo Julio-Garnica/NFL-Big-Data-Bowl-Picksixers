@@ -1,4 +1,4 @@
-﻿"""Motor de analisis: modelo de presion, revision de jugadas, simulador y perfiles.
+"""Motor de analisis: modelo de presion, revision de jugadas, simulador y perfiles.
 
 Metrica comun (ver review.py): cada jugada es Exitosa / Neutra / Negativa.
 Puntaje de una opcion = P(exitosa) - P(negativa).
@@ -505,11 +505,38 @@ class Engine:
         if not m.any():
             return None
         d, t, lg, lt = self.df[m], self.review.table[m], self.df, self.review.table
-        s = self.scout[self.scout.pff_role == "Pass Block"].merge(d[["gameId", "playId"]], on=["gameId", "playId"])
-        s["pres"] = (s[["pff_hitAllowed", "pff_hurryAllowed", "pff_sackAllowed"]].fillna(0).sum(1) > 0).astype(int)
-        g = s.groupby("nflId").agg(snaps=("pres", "size"), pressures=("pres", "sum"),
-                                   sacks=("pff_sackAllowed", "sum"), beaten=("pff_beatenByDefender", "sum")).reset_index()
-        g = g[g.snaps >= 40].assign(rate=lambda x: x.pressures / x.snaps).sort_values("rate", ascending=False)
+        key = ["gameId", "playId"]
+        s = self.scout[self.scout.pff_role == "Pass Block"].merge(d[key + ["nRush"]], on=key)
+        for c in ("pff_hitAllowed", "pff_hurryAllowed", "pff_sackAllowed", "pff_beatenByDefender"):
+            s[c] = s[c].fillna(0)
+        s["pres"] = ((s.pff_hitAllowed + s.pff_hurryAllowed + s.pff_sackAllowed) > 0).astype(int)
+        g = s.groupby("nflId").agg(snaps=("pres", "size"), pressures=("pres", "sum"), hurries=("pff_hurryAllowed", "sum"),
+                                   hits=("pff_hitAllowed", "sum"), sacks=("pff_sackAllowed", "sum"),
+                                   beaten=("pff_beatenByDefender", "sum"),
+                                   spot=("pff_positionLinedUp", lambda x: x.value_counts().index[0])).reset_index()
+        g = g[g.snaps >= 20].assign(rate=lambda x: x.pressures / x.snaps).sort_values(["snaps"], ascending=False)
+        # Tasa de presion permitida por bloqueador en la liga (solo linieros con muestra), para comparar.
+        allb = self.scout[self.scout.pff_role == "Pass Block"]
+        allp = (allb[["pff_hitAllowed", "pff_hurryAllowed", "pff_sackAllowed"]].fillna(0).sum(1) > 0)
+        league_block_rate = float(allp.mean())
+
+        def blk(lab, mm):
+            g2, t2 = d[mm], t[mm.to_numpy()]
+            return {"label": lab, "n": int(len(g2)), "pressureRate": _f(g2.pressure.mean()) if len(g2) else None,
+                    "sackRate": _f((g2.action == "sack").mean()) if len(g2) else None,
+                    "successRate": _f((t2.tier == 2).mean()) if len(g2) else None,
+                    "timeToThrow": _f(g2.timeToEnd[g2.endEvent == "pass_forward"].median(), 2) if len(g2) else None}
+
+        by_rush = [blk(l, mm) for l, mm in (("4 o menos", d.nRush <= 4), ("5", d.nRush == 5), ("6 o más", d.nRush >= 6))]
+        by_ctx = [blk(l, mm) for l, mm in (("1.º y 2.º down", d.down <= 2), ("3.º corto (≤4 yd)", (d.down >= 3) & (d.yardsToGo <= 4)),
+                                           ("3.º medio (5-7 yd)", (d.down >= 3) & d.yardsToGo.between(5, 7)),
+                                           ("3.º largo (≥8 yd)", (d.down >= 3) & (d.yardsToGo >= 8)))]
+        by_blk = [blk(l, mm) for l, mm in (("5 bloqueadores", d.nBlock <= 5), ("6", d.nBlock == 6), ("7 o más", d.nBlock >= 7))]
+        qbs = d.groupby("qbId").size().sort_values(ascending=False)
+        # Defensivos rivales que mas presionaron a esta ofensiva
+        r = self.scout[self.scout.pff_role == "Pass Rush"].merge(d[key], on=key)
+        r["pres"] = r[["pff_hit", "pff_hurry", "pff_sack"]].fillna(0).sum(1) > 0
+        top_rivals = r[r.pres].groupby("nflId").size().sort_values(ascending=False).head(6)
         return {
             "team": self.team_info(team), "dropbacks": int(len(d)),
             "pressureRate": _f(d.pressure.mean()), "leaguePressureRate": _f(lg.pressure.mean()),
@@ -518,11 +545,29 @@ class Engine:
             "timeToThrow": _f(d.timeToEnd[d.endEvent == "pass_forward"].median(), 2),
             "leagueTimeToThrow": _f(lg.timeToEnd[lg.endEvent == "pass_forward"].median(), 2),
             "successRate": _f((t.tier == 2).mean()), "leagueSuccess": _f((lt.tier == 2).mean()),
-            "blockers": [{**self.person(r.nflId), "snaps": int(r.snaps), "pressures": int(r.pressures),
-                          "sacks": int(r.sacks), "rate": _f(r.rate)} for r in g.itertuples()],
+            "negativeRate": _f((t.tier == 0).mean()), "leagueNegative": _f((lt.tier == 0).mean()),
+            "blitzFaced": _f((d.nRush >= 5).mean()), "leagueBlitzFaced": _f((lg.nRush >= 5).mean()),
+            "extraBlockers": _f((d.nBlock >= 6).mean()), "leagueExtraBlockers": _f((lg.nBlock >= 6).mean()),
+            "byRushers": by_rush, "byContext": by_ctx, "byBlockers": by_blk,
+            "leagueBlockerRate": _f(league_block_rate),
+            "blockers": [{**self.person(x.nflId), "snaps": int(x.snaps), "pressures": int(x.pressures), "hurries": int(x.hurries),
+                          "hits": int(x.hits), "sacks": int(x.sacks), "beaten": int(x.beaten), "spot": x.spot, "rate": _f(x.rate)}
+                         for x in g.itertuples()],
+            "qbs": [{**self.person(q), "dropbacks": int(n)} for q, n in qbs.items() if n >= 10],
+            "topRivals": [{**self.person(k), "pressures": int(v)} for k, v in top_rivals.items()],
             "adjustment": _f(self.off_shift.get(team, 0.0)),
         }
 
+    def offense_cards(self) -> list[dict]:
+        d, t = self.df, self.review.table
+        out = []
+        for team in sorted(d.possessionTeam.unique()):
+            m = (d.possessionTeam == team).to_numpy()
+            out.append({**self.team_info(team), "pressureRate": _f(d[m].pressure.mean()),
+                        "sackRate": _f((d[m].action == "sack").mean()), "successRate": _f((t[m].tier == 2).mean()),
+                        "timeToThrow": _f(d[m].timeToEnd[d[m].endEvent == "pass_forward"].median(), 2),
+                        "dropbacks": int(m.sum())})
+        return out
     def team_cards(self) -> list[dict]:
         d, t = self.df, self.review.table
         out = []

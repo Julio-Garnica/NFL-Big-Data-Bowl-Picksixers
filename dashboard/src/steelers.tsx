@@ -1,8 +1,11 @@
-﻿import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
 
 // Nuestro equipo. Cada vez que un jugador o el logo de este equipo aparece en pantalla, se celebra.
 export const MY_TEAM = 'PIT'
 const SHOW_MS = 3500
+// Caracteres no ASCII escritos como escapes para que no se dañen con cambios de codificación.
+const FOOTBALL = '\u{1F3C8}'
+const CLOSE = '\u00D7'
 
 const Ctx = createContext<() => void>(() => {})
 
@@ -33,14 +36,16 @@ export function SteelersProvider({ children }: { children: ReactNode }) {
     <Ctx.Provider value={cheer}>
       {children}
       {visible && (
+        <div className="pointer-events-none fixed inset-x-0 top-24 z-[90] flex justify-center px-4">
         <div key={shown} role="status" aria-live="polite"
-          className="steelers-pop fixed left-1/2 top-24 z-[90] flex -translate-x-1/2 items-center gap-3 rounded-2xl border-2 border-[#FFB612] bg-[#101820] px-5 py-3 text-[#FFB612] shadow-2xl">
+          className="steelers-pop pointer-events-auto flex items-center gap-3 rounded-2xl border-2 border-[#FFB612] bg-[#101820] px-5 py-3 text-[#FFB612] shadow-2xl">
           <img src={`teams/${MY_TEAM}.png`} alt="Steelers" className="steelers-wave h-10 w-10 rounded-full bg-white p-0.5" />
-          <span className="text-lg font-black tracking-wide md:text-xl">HERE WE GO STEELERS!!!</span>
-          <span className="steelers-wave text-2xl" aria-hidden>ðŸˆ</span>
-          <button type="button" onClick={close} aria-label="Cerrar" className="ml-1 rounded-full px-2 text-[#FFB612]/70 hover:text-[#FFB612]">Ã—</button>
+          <span className="whitespace-nowrap text-lg font-black tracking-wide md:text-xl">HERE WE GO STEELERS!!!</span>
+          <span className="steelers-wave inline-block text-2xl" aria-hidden>{FOOTBALL}</span>
+          <button type="button" onClick={close} aria-label="Cerrar"
+            className="ml-1 flex h-7 w-7 items-center justify-center rounded-full text-xl leading-none text-[#FFB612]/70 hover:bg-[#FFB612]/10 hover:text-[#FFB612]">{CLOSE}</button>
+        </div>
         </div>)}
     </Ctx.Provider>
   )
 }
-

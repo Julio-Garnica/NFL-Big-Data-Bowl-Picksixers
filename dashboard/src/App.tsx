@@ -1,5 +1,6 @@
 import Defenses from './Defenses'
 import Home from './Home'
+import Offenses from './Offenses'
 import Players from './Players'
 import Qbs from './Qbs'
 import Review from './Review'
@@ -12,6 +13,7 @@ export const NAV = [
   { id: 'revision', label: 'Revisión de jugadas', icon: 'review', hint: '¿Habría salido mejor la jugada?' },
   { id: 'simulador', label: 'Simulador', icon: 'target', hint: '¿Qué pasaría si…?' },
   { id: 'defensas', label: 'Defensas', icon: 'shield', hint: 'Perfiles de equipos y defensivos' },
+  { id: 'ofensivas', label: 'Ofensivas', icon: 'line', hint: 'Cómo protege cada ofensiva a su QB' },
   { id: 'qbs', label: 'Quarterbacks', icon: 'qb', hint: 'Cómo reacciona cada QB' },
   { id: 'jugadores', label: 'Jugadores', icon: 'users', hint: 'Directorio con fotos' },
 ] as const
@@ -35,14 +37,14 @@ export default function App() {
               <span className="block text-xs text-muted">Decisiones bajo presión · UNAM</span></span>
           </button>
 
-          <nav className="hidden flex-1 items-center justify-center gap-1 lg:flex" aria-label="Secciones">
+          <nav className="hidden flex-1 items-center justify-center gap-0.5 xl:flex" aria-label="Secciones">
             {NAV.map(n => (
               <a key={n.id} href={`#/${n.id}`} title={n.hint} aria-current={page === n.id ? 'page' : undefined}
-                className={`flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition ${page === n.id ? 'bg-accent/15 text-accent' : 'text-muted hover:bg-soft hover:text-fg'}`}>
+                className={`flex items-center gap-1.5 whitespace-nowrap rounded-xl px-2.5 py-2 text-sm font-medium transition ${page === n.id ? 'bg-accent/15 text-accent' : 'text-muted hover:bg-soft hover:text-fg'}`}>
                 <Icon name={n.icon} className="h-4 w-4" />{n.label}</a>))}
           </nav>
 
-          <div className="ml-auto flex items-center gap-2 lg:ml-0">
+          <div className="ml-auto flex items-center gap-2 xl:ml-0">
             <Icon name="palette" className="h-4 w-4 text-muted" />
             <label htmlFor="tema" className="sr-only">Tema</label>
             <select id="tema" value={theme} onChange={e => setTheme(e.target.value)}
@@ -52,7 +54,7 @@ export default function App() {
           </div>
         </div>
         {/* Navegacion en pantallas medianas y pequenas */}
-        <nav className="flex gap-1 overflow-x-auto px-3 pb-2 lg:hidden" aria-label="Secciones">
+        <nav className="flex gap-1 overflow-x-auto px-3 pb-2 xl:hidden" aria-label="Secciones">
           {NAV.map(n => (
             <a key={n.id} href={`#/${n.id}`} aria-current={page === n.id ? 'page' : undefined}
               className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium ${page === n.id ? 'bg-accent/15 text-accent' : 'text-muted hover:bg-soft'}`}>
@@ -71,6 +73,7 @@ export default function App() {
           page === 'revision' ? <Review meta={meta} parts={parts.slice(1)} go={go} /> :
           page === 'simulador' ? <Simulator meta={meta} /> :
           page === 'defensas' ? <Defenses meta={meta} parts={parts.slice(1)} go={go} /> :
+          page === 'ofensivas' ? <Offenses parts={parts.slice(1)} go={go} /> :
           page === 'qbs' ? <Qbs meta={meta} parts={parts.slice(1)} go={go} /> :
           <Players go={go} />}
       </main>

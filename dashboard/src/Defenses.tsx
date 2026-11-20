@@ -1,4 +1,4 @@
-﻿import { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Bar, BarChart, CartesianGrid, ComposedChart, Legend, Line, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { G } from './glossary'
 import { PersonChip } from './shared'
@@ -53,7 +53,6 @@ function TeamGrid({ go }: { go: (p: string) => void }) {
 function TeamProfile({ team, go }: { team: string; go: (p: string) => void }) {
   const { data: d, error } = useApi(`api/defense/${team}`)
   const { data: roster } = useApi<any[]>(`api/defense/${team}/players`)
-  const { data: off } = useApi(`api/offense/${team}`)
   const [grp, setGrp] = useState('Todos')
   const { grid, tick, tooltip, legend, c } = useChart()
   const list = useMemo(() => (roster ?? []).filter(p => grp === 'Todos' || p.group === grp), [roster, grp])
@@ -143,19 +142,12 @@ function TeamProfile({ team, go }: { team: string; go: (p: string) => void }) {
         <p className="mt-3 text-xs text-muted">Tasa = presiones / jugadas de rush; "–" si tiene menos de 25 jugadas de rush.<Info text={G.tasaPresion} /></p>
       </Card>
 
-      {off && (
-        <Card title={`Bonus: cómo protege la ofensiva de ${t.nick}`} info="Útil si este es tu equipo: cuánta presión permite su línea y qué bloqueadores la permiten más.">
-          <div className="grid gap-5 sm:grid-cols-4">
-            <Stat label="Presión permitida" value={pct(off.pressureRate, 1)} info={G.presion} sub={<VsLeague v={off.pressureRate} lg={off.leaguePressureRate} higherIsGood={false} />} />
-            <Stat label="Sacks permitidos" value={pct(off.sackRate, 1)} info={G.sackRate} sub={<VsLeague v={off.sackRate} lg={off.leagueSackRate} higherIsGood={false} />} />
-            <Stat label="Tiempo al pase" value={`${num(off.timeToThrow, 1)} s`} info={G.tiempoPase} sub={`liga ${num(off.leagueTimeToThrow, 1)} s`} />
-            <Stat label="Éxito ofensivo" value={pct(off.successRate)} info={G.exitosa} sub={<VsLeague v={off.successRate} lg={off.leagueSuccess} higherIsGood />} />
-          </div>
-          <h4 className="mt-4 text-xs font-semibold uppercase tracking-wider text-muted">Bloqueadores con más presión permitida (mín. 40 jugadas)</h4>
-          <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {off.blockers.slice(0, 6).map((b: any) => <PersonChip key={b.id} p={b} sub={`${pct(b.rate, 1)} presión permitida · ${b.sacks} sacks`} />)}
-          </div>
-        </Card>)}
+      <button type="button" onClick={() => go(`ofensivas/${team}`)}
+        className="flex w-full items-center justify-between rounded-2xl border border-line bg-surface p-4 text-left shadow-card transition hover:border-accent">
+        <span className="flex items-center gap-3"><TeamLogo abbr={team} size="h-8 w-8" />
+          <span><b>¿Quieres ver cómo protege su ofensiva?</b><span className="block text-xs text-muted">Presión permitida, bloqueadores y QBs en la página Ofensivas.</span></span></span>
+        <Icon name="arrow" className="h-4 w-4 text-accent" />
+      </button>
     </div>
   )
 }

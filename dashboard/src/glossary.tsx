@@ -45,6 +45,9 @@ export const G = {
   negativaForzada: 'Porcentaje de dropbacks rivales que terminaron en jugada negativa (sack, intercepción o pérdida). Más es mejor para la defensa.',
   ajuste: 'Ajuste del modelo de presión para este equipo, en log-odds. Positivo = genera (o permite) más presión de la esperada por su forma de jugar.',
   auc: 'AUC: qué tan bien separa el modelo las jugadas con y sin presión. 0.5 es azar, 1.0 es perfecto.',
+  presionPermitida: 'Presión permitida: porcentaje de dropbacks de esta ofensiva en los que la defensa rival presionó al QB (apuro, golpe o sack). Menos es mejor.',
+  bloqueosPerdidos: 'Bloqueos perdidos: veces que PFF marcó a un bloqueador como vencido por su defensor. En el equipo se muestra el promedio por dropback.',
+  bloqueadoresExtra: 'Bloqueadores extra: jugadas en las que la ofensiva deja 6 o más jugadores a proteger (los 5 linieros más un TE o RB).',
   odds: 'Razón de momios: cuánto se multiplica la posibilidad de presión cuando el factor está presente. 1 = sin efecto; 1.5 = 50 % más; 0.7 = 30 % menos.',
 }
 

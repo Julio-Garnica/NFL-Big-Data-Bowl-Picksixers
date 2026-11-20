@@ -1,4 +1,4 @@
-﻿"""API del asistente de decisiones para el head coach.
+"""API del asistente de decisiones para el head coach.
 
 Ejecuta: .venv\\Scripts\\python.exe -m uvicorn backend.main:app --reload
 """
@@ -92,6 +92,11 @@ def defense(team: str) -> dict:
 @app.get("/api/defense/{team}/players")
 def defense_players(team: str) -> list:
     return engine().defenders(team.upper())
+
+
+@app.get("/api/offense-teams")
+def offense_teams() -> list:
+    return engine().offense_cards()
 
 
 @app.get("/api/offense/{team}")
